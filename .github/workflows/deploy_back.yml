@@ -1,0 +1,28 @@
+name: Deploy Backend
+on:
+  push:
+    branches: [ "main"]
+  pull_request:
+    branches: [ "main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+          - uses: actions/checkout@v2
+          - name: Create subtree
+            run: git subtree push --prefix manager_api origin deploy_back_final
+          - name: Checkout subtree
+            run: git checkout deploy_back_final
+          - name: install gigalixir
+            run: sudo pip install gigalixir --ignore-installed six
+          - name: Login gigalixir
+            run: gigalixir login -e "afatou20@gmail.com" -y -p "padmin2502"
+          - name: Add gigalixir git to project
+            run: gigalixir git:remote timemanagerapi
+          - name: Push to gigalixir
+            run: git push -f gigalixir HEAD:refs/heads/main
+          - name: Git checkout main
+            run: git checkout main
+          - name: Delete subtree
+            run:  git push origin --delete deploy_back_final

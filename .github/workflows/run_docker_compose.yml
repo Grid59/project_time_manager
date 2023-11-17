@@ -1,0 +1,21 @@
+
+name: Run docker compose
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*"]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    env:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: padmin
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Docker compose
+        run: docker compose -f ./docker-compose.yml logs
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+
+

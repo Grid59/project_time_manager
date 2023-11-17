@@ -1,0 +1,35 @@
+name: Deploy Frontend
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build App
+        run: |
+          cd timeManager-vue/
+          ls
+          npm install
+          npm run build 
+          npm install netlify-cli -g
+
+
+      - name: Deploy to netlify
+        working-directory: timeManager-vue
+        env:
+          NETLIFY_AUTH_TOKEN: "nfp_VSDDN9sUMHYu8Yf1Cyvmp4pdsGbEwmXDaf84"
+          NETLIFY_SITE_ID: "df76ac9b-af4d-4637-98c9-c778d87c9c20"
+        shell: bash
+        run: netlify deploy --dir=dist --prod --auth $NETLIFY_AUTH_TOKEN --message="GitHub action deploy $RUN_ID on $CURR_BRANCH"
+
